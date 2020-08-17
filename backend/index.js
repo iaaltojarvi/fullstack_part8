@@ -108,14 +108,14 @@ type Mutation {
   ): Book,
   editAuthor (
 name: String!
-  setBornTo: Int
+  setBornTo: Int!
 ): Author
 }
 type Query {
 bookCount: Int!
 authorCount: Int!
 allBooks(author: String, genre: String): [Book!]!
-allAuthors: [Author!]!
+allAuthors: [Author]
 }
 `
 
