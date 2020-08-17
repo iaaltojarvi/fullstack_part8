@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import { useQuery, useMutation } from '@apollo/client'
+import Select from 'react-select'
 import { ALL_AUTHORS, EDIT_AUTHOR } from '../queries'
 
 const Authors = (props) => {
   const [name, setName] = useState('')
   const [setBornTo, setSetBornTo] = useState('')
+  const [selectedOption, setSelectedOption] = useState(null)
   const result = useQuery(ALL_AUTHORS)
   const [editAuthor] = useMutation(EDIT_AUTHOR, {
     refetchQueries: [{ query: ALL_AUTHORS }]
@@ -21,10 +23,20 @@ const Authors = (props) => {
   const submit = async (event) => {
     event.preventDefault()
     console.log('update author...')
-    editAuthor({ variables: { name, setBornTo }})
+    editAuthor({ variables: { name, setBornTo } })
     setName('')
     setSetBornTo('')
   }
+
+  const handleChange = selectedOption => {
+    setSelectedOption(selectedOption)
+    setName(selectedOption.value)
+  }
+
+  let options = 
+    result.data.allAuthors.map(author => {
+      return { value: author.name, label: author.name }
+    })
 
   return (
     <div>
@@ -52,23 +64,24 @@ const Authors = (props) => {
       <br></br>
       <form onSubmit={submit}>
         <h3>Set birth year</h3>
-        <div>
-          Name
-          <input
-            value={name}
-            onChange={({ target }) => setName(target.value)}
-          />
-        </div>
+        <Select
+          value={selectedOption}
+          onChange={handleChange}
+          options={options}
+          placeholder={"Select author"}
+          isDisabled={!options.length && true}
+        />
         <div>
           Born
           <input
+            disabled={!options.length && true}
             value={setBornTo}
             onChange={({ target }) => setSetBornTo(Number(target.value))}
           />
         </div>
         <button type='submit'>Update author</button>
       </form>
-    </div>
+    </div >
   )
 }
 
