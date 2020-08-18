@@ -55,16 +55,22 @@ const resolvers = {
   Query: {
     bookCount: () => books.length,
     authorCount: () => authors.length,
-    allBooks: (root, args) => {
-      return Book.find({})
+    allBooks: async (root, args) => {
+      if (args.genre) {
+        const books = await Book.find({genres: { $in: args.genre} }).populate('author', {name: 1})
+        return books
+      } else {
+        const books = await Book.find({}).populate('author', { name: 1 })
+        return books
+      }
     },
     allAuthors: (root, args) => {
       return Author.find({})
     }
   },
   Author: {
-    bookCount: (root) => {
-      const count = books.filter(b => b.author === root.name).length
+    bookCount: (root, args) => {
+      const count = Book.countDocuments({ author: { $in: root._id } })
       return count
     }
   },
@@ -82,18 +88,9 @@ const resolvers = {
       }
     },
     editAuthor: async (root, args) => {
-      const author = await Author.findOne({ name: args.name })
+      let author = await Author.findOne({ name: args.name })
       author.born = args.setBornTo
       return author.save()
-      // const authorExisting = authors.find(a => a.name === args.name)
-      // if (authorExisting) {
-      //   const updatedAuthor = { ...authorExisting, born: args.setBornTo }
-      //   let newArr = authors.filter(a => a.name !== args.name)
-      //   authors = newArr.concat(updatedAuthor)
-      //   return updatedAuthor
-      // } else {
-      //   return null
-      // }
     }
   }
 }
