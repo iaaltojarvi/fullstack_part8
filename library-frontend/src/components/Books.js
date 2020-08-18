@@ -5,7 +5,6 @@ import { ALL_BOOKS } from '../queries';
 const Books = (props) => {
 
   const result = useQuery(ALL_BOOKS)
-  console.log('books result', result)
 
   if (!props.show) {
     return null
