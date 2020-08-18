@@ -4,13 +4,15 @@ import Select from 'react-select'
 import { ALL_AUTHORS, EDIT_AUTHOR } from '../queries'
 
 const Authors = (props) => {
-  const [name, setName] = useState('')
-  const [setBornTo, setSetBornTo] = useState('')
-  const [selectedOption, setSelectedOption] = useState(null)
+
+  // const [name, setName] = useState('')
+  // const [setBornTo, setSetBornTo] = useState('')
+  // const [selectedOption, setSelectedOption] = useState(null)
+
   const result = useQuery(ALL_AUTHORS)
-  const [editAuthor] = useMutation(EDIT_AUTHOR, {
-    refetchQueries: [{ query: ALL_AUTHORS }]
-  })
+  // const [editAuthor] = useMutation(EDIT_AUTHOR, {
+  //   refetchQueries: [{ query: ALL_AUTHORS }]
+  // })
 
   if (!props.show) {
     return null
@@ -19,24 +21,29 @@ const Authors = (props) => {
   if (result.loading) {
     return <div>Loading authors...</div>
   }
-
-  const submit = async (event) => {
-    event.preventDefault()
-    console.log('update author...')
-    editAuthor({ variables: { name, setBornTo } })
-    setName('')
-    setSetBornTo('')
+  if (result.data === null) {
+    return <div>No authors in db</div>
   }
 
-  const handleChange = selectedOption => {
-    setSelectedOption(selectedOption)
-    setName(selectedOption.value)
-  }
+  console.log(result)
 
-  let options = 
-    result.data.allAuthors.map(author => {
-      return { value: author.name, label: author.name }
-    })
+  // const submit = async (event) => {
+  //   event.preventDefault()
+  //   console.log('update author...')
+  //   editAuthor({ variables: { name, setBornTo } })
+  //   setName('')
+  //   setSetBornTo('')
+  // }
+
+  // const handleChange = selectedOption => {
+  //   setSelectedOption(selectedOption)
+  //   setName(selectedOption.value)
+  // }
+
+  // let options = 
+  //   result.data.allAuthors.map(author => {
+  //     return { value: author.name, label: author.name }
+  //   })
 
   return (
     <div>
@@ -56,12 +63,12 @@ const Authors = (props) => {
             <tr key={a.name}>
               <td>{a.name}</td>
               <td>{a.born}</td>
-              <td>{a.bookCount}</td>
+              <td>{a.bookCount || 0}</td>
             </tr>
           ) : null}
         </tbody>
       </table>
-      <br></br>
+      {/* <br></br>
       <form onSubmit={submit}>
         <h3>Set birth year</h3>
         <Select
@@ -80,7 +87,7 @@ const Authors = (props) => {
           />
         </div>
         <button type='submit'>Update author</button>
-      </form>
+      </form> */}
     </div >
   )
 }

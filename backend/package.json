@@ -20,7 +20,10 @@
   "homepage": "https://github.com/iaaltojarvi/fullstack_part8#readme",
   "dependencies": {
     "apollo-server": "^2.16.1",
+    "dotenv": "^8.2.0",
     "graphql": "^15.3.0",
+    "mongoose": "^5.10.0",
+    "mongoose-unique-validator": "^2.0.3",
     "nodemon": "^2.0.4",
     "uuid": "^8.3.0"
   }
