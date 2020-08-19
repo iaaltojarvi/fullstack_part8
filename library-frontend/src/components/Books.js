@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useQuery } from '@apollo/client'
 import { ALL_BOOKS } from '../queries';
 
-const Books = ({ show, setError }) => {
+const Books = ({ show }) => {
   const [genre, setGenre] = useState(null)
 
   const result = useQuery(ALL_BOOKS)

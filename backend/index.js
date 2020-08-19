@@ -162,13 +162,14 @@ const resolvers = {
     },
 
     createUser: (root, args) => {
-      const user = new User({ username: args.username })
-      return user.save()
-        .catch(err => {
-          throw new UserInputError(err.message, {
-            invalidArgs: args
-          })
+      const user = new User({ username: args.username, favoriteGenre: args.favoriteGenre })
+      try {
+        user.save()
+      } catch (err) {
+        throw new UserInputError(err.message, {
+          invalidArgs: args
         })
+      }
     },
 
     login: async (root, args) => {

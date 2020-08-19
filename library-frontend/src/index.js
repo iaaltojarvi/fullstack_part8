@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { setContext } from 'apollo-link-context'
 import {
-    ApolloClient, ApolloProvider, HttpLink, InMemoryCache
+    ApolloClient, ApolloProvider, HttpLink, InMemoryCache, connectToDevTool
 } from '@apollo/client'
 import App from './App'
 
@@ -20,7 +20,8 @@ const httpLink = new HttpLink({ uri: 'http://localhost:4000' })
 
 const client = new ApolloClient({
     cache: new InMemoryCache(),
-    link: authLink.concat(httpLink)
+    link: authLink.concat(httpLink),
+    connectToDevTool
 })
 
 ReactDOM.render(

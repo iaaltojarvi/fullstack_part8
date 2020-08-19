@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { useMutation } from '@apollo/client'
-import { LOGIN } from '../queries';
+import { useMutation, useQuery } from '@apollo/client'
+import { LOGIN, ME } from '../queries';
 
 
-const LoginForm = ({ setToken, setError }) => {
+const LoginForm = ({ setToken, setUser, setError }) => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
 
@@ -13,22 +13,25 @@ const LoginForm = ({ setToken, setError }) => {
         }
     })
 
-    useEffect(() => {
-        if (result.data) {
-            const token = result.data.login.value
-            setToken(token)
-            localStorage.setItem('token', token)
-        }
-    }, [result.data]) // eslint-disable-line
+    const getUser = useQuery(ME)
+
+    const setData = () => {
+        const token = result.data && result.data.login.value
+        setToken(token)
+        localStorage.setItem('token', token)
+        const userData = getUser.data && getUser.data.me
+        setUser({ username: userData.username, favoriteGenre: userData.favoriteGenre })
+    }
 
     const submit = async (event) => {
         event.preventDefault()
-        login({ variables: { username, password } })
+        await login({ variables: { username, password } })
+        setData()
     }
 
     return (
         <div>
-            <h4>Login to be able to add books and edit authors</h4>
+            <h4>Login to get recommendations and further actions</h4>
             <form onSubmit={submit}>
                 <div>
                     Username <input

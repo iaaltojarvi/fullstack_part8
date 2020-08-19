@@ -42,7 +42,7 @@ const Authors = ({ show, setError, token }) => {
   }
 
   let options =
-    result.data.allAuthors.map(author => {
+    result.data && result.data.allAuthors.map(author => {
       return { value: author.name, label: author.name }
     })
 
