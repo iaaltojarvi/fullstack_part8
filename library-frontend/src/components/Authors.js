@@ -3,7 +3,7 @@ import { useQuery, useMutation } from '@apollo/client'
 import Select from 'react-select'
 import { ALL_AUTHORS, EDIT_AUTHOR } from '../queries'
 
-const Authors = (props) => {
+const Authors = ({ show, setError }) => {
 
   const [name, setName] = useState('')
   const [setBornTo, setSetBornTo] = useState('')
@@ -11,10 +11,13 @@ const Authors = (props) => {
 
   const result = useQuery(ALL_AUTHORS)
   const [editAuthor] = useMutation(EDIT_AUTHOR, {
-    refetchQueries: [{ query: ALL_AUTHORS }]
+    refetchQueries: [{ query: ALL_AUTHORS }],
+    onError: (error) => {
+      setError(error.graphQLErrors[0].message)
+    }
   })
 
-  if (!props.show) {
+  if (!show) {
     return null
   }
 
@@ -24,7 +27,10 @@ const Authors = (props) => {
 
   const submit = async (event) => {
     event.preventDefault()
-    editAuthor({ variables: { name, setBornTo } })
+    await editAuthor({ variables: { name, setBornTo } })
+      .catch(error => {
+        setError(error.message)
+      })
     setName('')
     setSetBornTo('')
     setSelectedOption('')

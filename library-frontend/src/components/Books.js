@@ -2,16 +2,20 @@ import React from 'react'
 import { useQuery } from '@apollo/client'
 import { ALL_BOOKS } from '../queries';
 
-const Books = (props) => {
+const Books = ({ show, setError }) => {
 
   const result = useQuery(ALL_BOOKS)
 
-  if (!props.show) {
+  if (!show) {
     return null
   }
 
   if (result.loading) {
     return <div>Loading books...</div>
+  }
+
+  if (!result.data) {
+    return setError('Could not fetch books')
   }
 
   return (
