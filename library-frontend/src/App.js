@@ -26,8 +26,6 @@ const App = () => {
 
   const client = useApolloClient()
 
-  console.log('token', token)
-
   const logout = () => {
     setToken(null)
     localStorage.clear()
@@ -41,39 +39,30 @@ const App = () => {
     }, 5000)
   }
 
-  if (!token) {
-    return (
-      <div>
-        <Notify errorMessage={errorMessage} />
-        <h2>Login</h2>
-        <LoginForm setToken={setToken} setError={notify} />
-      </div>
-    )
-  }
-
   return (
     <div>
       <div>
         {errorMessage && <Notify errorMessage={errorMessage} />}
-        <button onClick={() => setPage('authors')}>authors</button>
-        <button onClick={() => setPage('books')}>books</button>
-        <button onClick={() => setPage('add')}>add book</button>
-        <button onClick={() => logout()}>Logout</button>
+        <button onClick={() => setPage('authors')}>Authors</button>
+        <button onClick={() => setPage('books')}>Books</button>
+        {token &&
+          <div>
+            <button onClick={() => setPage('add')}>Add book</button>
+            <button onClick={() => logout()}>Logout</button>
+          </div>
+        }
       </div>
-
+      {!token && <LoginForm setToken={setToken} setError={notify} />}
       <Authors
-        show={page === 'authors'} setError={notify}
+        show={page === 'authors'} setError={notify} token={token}
       />
-
       <Books
         show={page === 'books'} setError={notify}
       />
-
       <NewBook
         show={page === 'add'} setError={notify}
       />
-
-    </div>
+    </div >
   )
 }
 

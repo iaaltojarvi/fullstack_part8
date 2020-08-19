@@ -28,6 +28,7 @@ const LoginForm = ({ setToken, setError }) => {
 
     return (
         <div>
+            <h4>Login to be able to add books and edit authors</h4>
             <form onSubmit={submit}>
                 <div>
                     Username <input
