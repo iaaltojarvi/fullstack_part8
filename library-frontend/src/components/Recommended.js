@@ -8,18 +8,16 @@ const Recommended = ({ show }) => {
         options: { fetchPolicy: 'no-cache' }
     })
 
-    console.log('books', booksData, 'user', userData)
-
     if (!show) {
         return null
     }
 
-    const filtered = booksData.data && booksData.data.allBooks.filter(b => b.genres.includes(userData.data.me.favoriteGenre))
+    const filtered = booksData.data && booksData.data.allBooks.filter(b => b.genres.includes(userData.data && userData.data.me.favoriteGenre))
 
     return (
         <div>
-            <h2>{`Welcome ${userData.data.me.username}!`}</h2>
-            <h3>{`Recommendations in your favorite genre '${userData.data.me.favoriteGenre}'`}</h3>
+            <h2>{`Welcome ${userData.data && userData.data.me.username}!`}</h2>
+            <h3>{`Recommendations in your favorite genre '${userData.data && userData.data.me.favoriteGenre}'`}</h3>
             <table>
                 <tbody>
                     <tr>
@@ -27,7 +25,7 @@ const Recommended = ({ show }) => {
                         <th>Author</th>
                         <th>Published</th>
                     </tr>
-                    {filtered.map(a =>
+                    {filtered && filtered.map(a =>
                         <tr key={a.title}>
                             <td>{a.title}</td>
                             <td>{a.author.name}</td>

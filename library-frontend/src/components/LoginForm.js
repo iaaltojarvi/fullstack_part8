@@ -14,8 +14,6 @@ const LoginForm = ({ setToken, setError }) => {
         options: { fetchPolicy: 'no-cache' }
     })
 
-   
-
     useEffect(() => {
         if (result.data) {
             const token = result.data.login.value
