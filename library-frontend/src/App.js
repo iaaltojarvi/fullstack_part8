@@ -51,7 +51,7 @@ const App = () => {
         show={page === 'books'} setError={notify}
       />
       <NewBook
-        show={page === 'add'} setError={notify}
+        show={page === 'add'} setError={notify} notify={notify}
       />
       {token && <Recommended show={page === 'recoms'} setError={notify} />}
     </div >

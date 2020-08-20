@@ -18,7 +18,7 @@ const Books = ({ show }) => {
 
   let genres = result.data.allBooks.map(b => b.genres).flat()
   const uniqueSet = new Set(genres)
-  genres = [...uniqueSet]
+  genres = [...uniqueSet, 'all books']
 
   return (
     <div>
@@ -34,7 +34,7 @@ const Books = ({ show }) => {
               published
             </th>
           </tr>
-          {!genre ? (
+          {!genre || genre === 'all books' ? (
             result.data && result.data.allBooks.map(a =>
               <tr key={a.title}>
                 <td>{a.title}</td>

@@ -1,18 +1,37 @@
 import React, { useState } from 'react'
-import { useMutation } from '@apollo/client'
-import { CREATE_BOOK, ALL_BOOKS, ALL_AUTHORS } from '../queries';
+import { useMutation, useSubscription, useApolloClient } from '@apollo/client'
+import { CREATE_BOOK, ALL_BOOKS, ALL_AUTHORS, BOOK_ADDED } from '../queries';
 
-const NewBook = ({ show, setError }) => {
+const NewBook = ({ show, setError, notify }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [published, setPublished] = useState('')
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState([])
 
+  const client = useApolloClient()
+
   const [addBook] = useMutation(CREATE_BOOK, {
-    refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }],
+    refetchQueries: [{ query: ALL_AUTHORS }],
     onError: (error) => {
       setError(error.graphQLErrors[0].message)
+    }
+  })
+
+  const updateCacheWith = (addedBook) => {
+    const dataInStore = client.readQuery({ query: ALL_BOOKS })
+    client.writeQuery({
+      query: ALL_BOOKS,
+      data: { allBooks: dataInStore.allBooks.concat(addedBook) }
+    })
+  }
+
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      const addedBook = subscriptionData.data.bookAdded
+      notify(`${addedBook.title} added`)
+      updateCacheWith(addedBook)
+      window.alert(`New book added: ${addedBook.title}`)
     }
   })
 
@@ -25,8 +44,8 @@ const NewBook = ({ show, setError }) => {
 
     await addBook({ variables: { title, author, published, genres } })
       .catch(error => {
-      setError(error.message)
-    })
+        setError(error.message)
+      })
     setTitle('')
     setPublished('')
     setAuthor('')
