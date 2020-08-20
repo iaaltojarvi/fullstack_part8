@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { useMutation, useQuery } from '@apollo/client'
-import { LOGIN, ME } from '../queries';
+import { useMutation } from '@apollo/client'
+import { LOGIN } from '../queries';
 
 
-const LoginForm = ({ setToken, setUser, setError }) => {
+const LoginForm = ({ setToken, setError }) => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
 
@@ -14,21 +14,16 @@ const LoginForm = ({ setToken, setUser, setError }) => {
         options: { fetchPolicy: 'no-cache' }
     })
 
-    console.log('result from login', result)
-
-    // const getUser = useQuery(ME, {
-    //     options: { fetchPolicy: 'no-cache' }
-    // })
+   
 
     useEffect(() => {
         if (result.data) {
             const token = result.data.login.value
             setToken(token)
             localStorage.setItem('token', token)
-            // const userData = getUser.data && getUser.data.me
-            // setUser({ username: userData.username, favoriteGenre: userData.favoriteGenre })
         }
     }, [result.data]) // eslint-disable-line
+
 
     const submit = async (event) => {
         event.preventDefault()

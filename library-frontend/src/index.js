@@ -8,6 +8,9 @@ import App from './App'
 
 const authLink = setContext((_, { headers }) => {
     const token = localStorage.getItem('token')
+    if (token === "undefined") {
+        return
+    }
     return {
         headers: {
             ...headers,

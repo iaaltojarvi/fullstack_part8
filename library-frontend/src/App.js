@@ -1,7 +1,6 @@
 
-import React, { useState, useEffect } from 'react'
-import { useApolloClient, useQuery } from '@apollo/client'
-import { ME } from './queries'
+import React, { useState } from 'react'
+import { useApolloClient } from '@apollo/client'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
@@ -12,11 +11,9 @@ import Recommended from './components/Recommended';
 const App = () => {
   const [page, setPage] = useState('authors')
   const [token, setToken] = useState(null)
-  const [user, setUser] = useState({ username: '', favoriteGenre: '' })
   const [errorMessage, setErrorMessage] = useState(null)
 
   const client = useApolloClient()
-  console.log('token', token)
 
   const logout = () => {
     setToken(null)
@@ -46,7 +43,7 @@ const App = () => {
       </div>
       {errorMessage && <Notify errorMessage={errorMessage} />}
       <br></br>
-      {!token && <LoginForm setToken={setToken} setUser={setUser} setError={notify} />}
+      {!token && <LoginForm setToken={setToken} setError={notify} />}
       <Authors
         show={page === 'authors'} setError={notify} token={token}
       />
@@ -56,7 +53,7 @@ const App = () => {
       <NewBook
         show={page === 'add'} setError={notify}
       />
-      <Recommended show={page === 'recoms'} user={user} setError={notify} />
+      {token && <Recommended show={page === 'recoms'} setError={notify} />}
     </div >
   )
 }
