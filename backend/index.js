@@ -110,7 +110,7 @@ const resolvers = {
     }
   },
   Author: {
-    bookCount: (root, args) => {
+    bookCount: async (root, args) => {
       const count = Book.countDocuments({ author: { $in: root._id } })
       return count
     }
@@ -184,9 +184,7 @@ const resolvers = {
         id: user._id
       }
 
-      const token = jwt.sign(userForToken, JWT_SECRET)
-
-      return { value: token }
+      return { value: jwt.sign(userForToken, JWT_SECRET) }
 
     }
   }

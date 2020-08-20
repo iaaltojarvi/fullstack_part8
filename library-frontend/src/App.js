@@ -16,6 +16,7 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
 
   const client = useApolloClient()
+  console.log('token', token)
 
   const logout = () => {
     setToken(null)

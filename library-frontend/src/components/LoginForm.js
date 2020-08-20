@@ -10,23 +10,29 @@ const LoginForm = ({ setToken, setUser, setError }) => {
     const [login, result] = useMutation(LOGIN, {
         onError: (error) => {
             setError(error.graphQLErrors[0].message)
-        }
+        },
+        options: { fetchPolicy: 'no-cache' }
     })
 
-    const getUser = useQuery(ME)
+    console.log('result from login', result)
 
-    const setData = () => {
-        const token = result.data && result.data.login.value
-        setToken(token)
-        localStorage.setItem('token', token)
-        const userData = getUser.data && getUser.data.me
-        setUser({ username: userData.username, favoriteGenre: userData.favoriteGenre })
-    }
+    // const getUser = useQuery(ME, {
+    //     options: { fetchPolicy: 'no-cache' }
+    // })
+
+    useEffect(() => {
+        if (result.data) {
+            const token = result.data.login.value
+            setToken(token)
+            localStorage.setItem('token', token)
+            // const userData = getUser.data && getUser.data.me
+            // setUser({ username: userData.username, favoriteGenre: userData.favoriteGenre })
+        }
+    }, [result.data]) // eslint-disable-line
 
     const submit = async (event) => {
         event.preventDefault()
         await login({ variables: { username, password } })
-        setData()
     }
 
     return (
